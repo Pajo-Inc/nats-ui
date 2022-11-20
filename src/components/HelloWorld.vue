@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {onMounted, reactive, ref} from 'vue'
 import jsonp from 'jsonp'
+import { invoke } from '@tauri-apps/api'
 
 defineProps<{ msg: string }>()
 
@@ -41,6 +42,12 @@ onMounted(() => {
   fetchVarz()
   fetchAccountz()
   fetchJetsreamz()
+  // now we can call our Command!
+// Right-click the application background and open the developer tools.
+// You will see "Hello, World!" printed in the console!
+  invoke('greet', { name: 'backend' })
+      // `invoke` returns a Promise
+      .then((response) => console.log(response))
 })
 
 const count = ref(0)
