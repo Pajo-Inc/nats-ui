@@ -1,34 +1,68 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {onMounted, reactive, ref} from 'vue'
+import jsonp from 'jsonp'
 
 defineProps<{ msg: string }>()
 
+const fetchVarz = () => {
+  jsonp("http://localhost:8222/varz", null, (err, data) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log(data);
+      varz.value = data;
+    }
+  });
+};
+
+const fetchAccountz = () => {
+  jsonp("http://localhost:8222/accountz", null, (err, data) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log(data);
+      accountz.value = data;
+    }
+  });
+};
+
+const fetchJetsreamz = () => {
+  jsonp("http://localhost:8222/jsz", null, (err, data) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log(data);
+      jsz.value = data;
+    }
+  });
+};
+
+onMounted(() => {
+  fetchVarz()
+  fetchAccountz()
+  fetchJetsreamz()
+})
+
 const count = ref(0)
+const varz = ref({})
+const accountz = ref({})
+const jsz = ref({})
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+  <h2>Varz</h2>
+  <div v-for="(value, name) in varz">
+    {{ name }}: {{ value }}
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <h2>Accountz</h2>
+  <div v-for="(value, name) in accountz">
+    {{ name }}: {{ value }}
+  </div>
+  <h2>Jetstreamz</h2>
+  <div v-for="(value, name) in jsz">
+    {{ name }}: {{ value }}
+  </div>
 </template>
 
 <style scoped>
